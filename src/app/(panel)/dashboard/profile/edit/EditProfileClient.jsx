@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { gravatar } from "next-gravatar";
 import countries from "next-countries";
 import {
   Select,
@@ -176,7 +177,7 @@ export default function EditProfileClient() {
           </CardHeader>
           <CardContent className="flex items-center gap-6">
             <Avatar className="h-20 w-20">
-              <AvatarImage src={profileData?.image} />
+              <AvatarImage src={gravatar(profileData?.email || "", 160)} />
               <AvatarFallback className="text-xl">
                 {profileData?.name?.[0]?.toUpperCase()}
               </AvatarFallback>

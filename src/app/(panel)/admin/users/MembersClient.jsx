@@ -47,6 +47,7 @@ import {
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { gravatar } from "next-gravatar";
 
 import {
   DropdownMenu,
@@ -328,7 +329,10 @@ export default function MembersClient() {
                     <TableCell className="py-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-zinc-900">
-                          <AvatarImage src={member.image} alt={member.name} />
+                          <AvatarImage
+                            src={gravatar(member.email, 100)}
+                            alt={member.name}
+                          />
                           <AvatarFallback className="bg-primary/5 text-xs font-bold text-primary">
                             {(member.name || member.username || "U")
                               .charAt(0)

@@ -74,7 +74,7 @@ export async function proxy(req) {
 
   // 2. Rate Limiting (Global / In-Memory)
   // Only apply to non-asset paths
-  if (!PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))) {
+  if (!PUBLIC_PREFIXES.some((p) => normalizedPath.startsWith(p))) {
     const ip = req.ip || req.headers.get("x-forwarded-for") || "anonymous";
     const limiter = rateLimit(`global_${ip}`, 100, 60000); // 100 requests per minute
 
@@ -118,7 +118,7 @@ export async function proxy(req) {
   /**
    * 1️⃣ Skip system and static routes early
    */
-  if (PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))) {
+  if (PUBLIC_PREFIXES.some((p) => normalizedPath.startsWith(p))) {
     return applySecurityHeaders(response);
   }
 

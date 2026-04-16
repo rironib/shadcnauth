@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import countries from "next-countries";
+import { gravatar } from "next-gravatar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -103,7 +104,7 @@ export default function ProfileViewClient() {
           <div className="px-4 pb-6 sm:px-6 sm:pb-8">
             <div className="-mt-12 flex flex-col gap-4 sm:-mt-16 sm:flex-row sm:items-end sm:gap-6">
               <Avatar className="h-24 w-24 border-4 border-white shadow-md sm:h-32 sm:w-32 dark:border-zinc-950">
-                <AvatarImage src={profileData.image} />
+                <AvatarImage src={gravatar(profileData.email || "", 200)} />
                 <AvatarFallback className="bg-zinc-100 text-3xl sm:text-4xl dark:bg-zinc-900">
                   {profileData.name?.[0]?.toUpperCase()}
                 </AvatarFallback>

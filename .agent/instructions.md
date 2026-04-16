@@ -59,7 +59,8 @@
 - ❌ **NEVER** Use Class Components or `var` keyword.
 - ❌ **NEVER** Mutate Props Directly.
 - ❌ **NEVER** Implement "Unlike" functionality for Threads or Posts. Engagement is one-way only.
-- ❌ **NEVER RENAME `proxy.js` to any other name (e.g., `middleware.js`).** The filename must remain strictly `proxy.js` for architectural reasons.
+- ❌ **STRICT RULE: NEVER EVER USE `middleware.js`. ALWAYS USE `proxy.js` instead.** Next.js in this project is configured to use `proxy.js` as its primary gateway. Creating a `middleware.js` will break the build.
+- ❌ **NEVER RENAME `proxy.js` to any other name.** The filename must remain strictly `proxy.js` for architectural reasons.
 
 ---
 
