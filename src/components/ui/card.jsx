@@ -1,16 +1,23 @@
-import { cn } from "@/lib/utils";
+import * as React from "react"
 
-function Card({ className, ...props }) {
+import { cn } from "@/lib/utils"
+
+function Card({
+  className,
+  size = "default",
+  ...props
+}) {
   return (
     <div
       data-slot="card"
+      data-size={size}
       className={cn(
-        "flex flex-col gap-4 rounded-xl border bg-card p-4 text-card-foreground shadow-sm sm:gap-6 sm:p-6",
-        className,
+        "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function CardHeader({ className, ...props }) {
@@ -18,22 +25,25 @@ function CardHeader({ className, ...props }) {
     <div
       data-slot="card-header"
       className={cn(
-        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-0 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-4 sm:[.border-b]:pb-6",
-        className,
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function CardTitle({ className, ...props }) {
   return (
     <div
       data-slot="card-title"
-      className={cn("leading-none font-semibold", className)}
+      className={cn(
+        "cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
+        className
+      )}
       {...props}
     />
-  );
+  )
 }
 
 function CardDescription({ className, ...props }) {
@@ -43,7 +53,7 @@ function CardDescription({ className, ...props }) {
       className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
-  );
+  )
 }
 
 function CardAction({ className, ...props }) {
@@ -52,21 +62,21 @@ function CardAction({ className, ...props }) {
       data-slot="card-action"
       className={cn(
         "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function CardContent({ className, ...props }) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-0", className)}
+      className={cn("px-4 group-data-[size=sm]/card:px-3", className)}
       {...props}
     />
-  );
+  )
 }
 
 function CardFooter({ className, ...props }) {
@@ -74,20 +84,20 @@ function CardFooter({ className, ...props }) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center px-0 [.border-t]:pt-4 sm:[.border-t]:pt-6",
-        className,
+        "flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 export {
   Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
+  CardFooter,
   CardTitle,
-};
+  CardAction,
+  CardDescription,
+  CardContent,
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteSeoSettings } from "@/actions/admin/seo";
+import { deleteSeoSettings, saveSeoSettings, updateSeoSettings } from "@/actions/admin/seo";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,6 +13,31 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -21,10 +46,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Eye, EyeOff, Plus, Search, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Edit,
+  Eye,
+  EyeOff,
+  Globe,
+  Loader2,
+  Plus,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function SeoManagementClient({ initialData = [] }) {
@@ -34,14 +77,21 @@ export default function SeoManagementClient({ initialData = [] }) {
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
 
+  // Sheet state
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSeo, setSelectedSeo] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Filter data
-  const filteredData = initialData.filter((item) =>
-    search
-      ? item.key.toLowerCase().includes(search.toLowerCase()) ||
-        item.title?.toLowerCase().includes(search.toLowerCase()) ||
-        item.description?.toLowerCase().includes(search.toLowerCase())
-      : true,
-  );
+  const filteredData = initialData.filter((item) => {
+    if (!search) return true;
+    const s = search.toLowerCase();
+    return (
+      item.key?.toLowerCase().includes(s) ||
+      item.title?.toLowerCase().includes(s) ||
+      item.description?.toLowerCase().includes(s)
+    );
+  });
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -55,9 +105,7 @@ export default function SeoManagementClient({ initialData = [] }) {
 
     try {
       const result = await deleteSeoSettings(deleteId);
-
       if (!result.success) throw new Error(result.error);
-
       toast.success("SEO entry deleted successfully");
       setDeleteId(null);
       router.refresh();
@@ -72,128 +120,117 @@ export default function SeoManagementClient({ initialData = [] }) {
     setPage(1);
   };
 
+  const handleOpenCreate = () => {
+    setSelectedSeo(null);
+    setIsOpen(true);
+  };
+
+  const handleOpenEdit = (seo) => {
+    setSelectedSeo(seo);
+    setIsOpen(true);
+  };
+
   return (
     <main className="app-container">
-      <div className="mb-6 flex flex-col justify-between gap-4 border-b border-zinc-100 pb-6 sm:flex-row sm:items-end dark:border-zinc-900">
+      <div className="mb-6 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-end">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">
+          <h1 className="text-2xl font-bold tracking-tight">
             SEO Management
           </h1>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted-foreground">
             Global metadata, index control and crawler settings
           </p>
         </div>
-        <Button asChild variant="default" size="sm">
-          <Link href="/admin/seo/new">
-            <Plus className="mr-2 h-3.5 w-3.5" /> New Entry
-          </Link>
+        <Button onClick={handleOpenCreate} variant="default">
+          <Plus className="mr-2 h-4 w-4" /> New Entry
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 py-1">
+      <div className="flex items-center gap-2 py-4">
         <div className="relative max-w-sm flex-1">
-          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-            <Search className="h-3.5 w-3.5 text-zinc-400" />
-          </div>
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Filter by key, title, or description..."
+            placeholder="Search keywords..."
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full rounded-md border border-zinc-200 bg-white py-1.5 pr-3 pl-9 text-xs shadow-sm transition-all placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-black"
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-9 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-black">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-zinc-100 bg-zinc-50/50 hover:bg-transparent dark:border-zinc-900 dark:bg-zinc-900/50">
-              <TableHead className="h-10 w-[50px] px-6 font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                #
-              </TableHead>
-              <TableHead className="h-10 font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                Page Key
-              </TableHead>
-              <TableHead className="h-10 font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                Meta Details
-              </TableHead>
-              <TableHead className="h-10 text-center font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                Visibility
-              </TableHead>
-              <TableHead className="h-10 font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                Updated
-              </TableHead>
-              <TableHead className="h-10 text-right font-mono text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
-                Actions
-              </TableHead>
+            <TableRow>
+              <TableHead className="w-[80px]">#</TableHead>
+              <TableHead>Key</TableHead>
+              <TableHead>Meta Details</TableHead>
+              <TableHead className="text-center">Visibility</TableHead>
+              <TableHead>Updated</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="h-48 text-center font-mono text-xs text-zinc-400 italic"
-                >
-                  NO SEO RECORDS FOUND.
+                <TableCell colSpan={6} className="h-96 p-0">
+                  <Empty>
+                    <EmptyMedia variant="icon">
+                      <Search className="size-4" />
+                    </EmptyMedia>
+                    <EmptyHeader>
+                      <EmptyTitle>No SEO records found</EmptyTitle>
+                      <EmptyDescription>
+                        You haven't created any SEO configurations yet. Click the
+                        button above to get started.
+                      </EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
                 </TableCell>
               </TableRow>
             ) : (
               paginatedData.map((seo, index) => (
-                <TableRow
-                  key={seo._id}
-                  className="group border-b border-zinc-100 transition-colors hover:bg-zinc-50/50 dark:border-zinc-900 dark:hover:bg-zinc-900/20"
-                >
-                  <TableCell className="px-6 py-4 font-mono text-[10px] text-zinc-400">
+                <TableRow key={seo._id}>
+                  <TableCell className="font-medium text-muted-foreground">
                     {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
-                  <TableCell className="py-4">
-                    <span className="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 font-mono text-[10px] text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900">
+                  <TableCell>
+                    <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-xs font-semibold">
                       {seo.key}
-                    </span>
+                    </code>
                   </TableCell>
-                  <TableCell className="py-4">
-                    <div className="space-y-0.5">
-                      <p className="line-clamp-1 text-sm font-bold text-zinc-900 italic dark:text-zinc-100">
-                        {seo.title}
-                      </p>
-                      <p className="line-clamp-1 max-w-sm text-[11px] text-zinc-500">
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">{seo.title}</span>
+                      <span className="text-xs text-muted-foreground line-clamp-1">
                         {seo.description}
-                      </p>
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 text-center">
+                  <TableCell className="text-center">
                     <Badge
-                      variant="outline"
-                      className={`items-center gap-1 rounded-md py-0 font-mono text-[9px] font-bold tracking-tight uppercase ${seo.isActive ? "border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100" : "border-zinc-200 text-zinc-400 dark:border-zinc-800"}`}
+                      variant={seo.isActive ? "default" : "secondary"}
+                      className="text-[10px] uppercase font-bold px-2 py-0"
                     >
-                      {seo.isActive ? (
-                        <Eye className="h-2.5 w-2.5" />
-                      ) : (
-                        <EyeOff className="h-2.5 w-2.5" />
-                      )}
                       {seo.isActive ? "Active" : "Hidden"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="py-4">
-                    <span className="font-mono text-[10px] tracking-tighter text-zinc-400 uppercase">
-                      {new Date(seo.updatedAt).toLocaleDateString()}
-                    </span>
+                  <TableCell className="text-muted-foreground text-xs">
+                    {new Date(seo.updatedAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell className="px-6 py-4 text-right">
+                  <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/seo/${seo._id}`}>
-                          <Edit className="h-3.5 w-3.5 text-zinc-500" />
-                        </Link>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleOpenEdit(seo)}>
+                        <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
                         onClick={() => setDeleteId(seo._id)}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
@@ -204,18 +241,18 @@ export default function SeoManagementClient({ initialData = [] }) {
         </Table>
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-zinc-100 bg-zinc-50/50 px-6 py-4 dark:border-zinc-900 dark:bg-zinc-900/50">
-            <p className="font-mono text-[10px] tracking-tighter text-zinc-500 uppercase">
-              Page {page} of {totalPages} • Total {filteredData.length} Records
+          <div className="flex items-center justify-between border-t p-4">
+            <p className="text-xs text-muted-foreground">
+              Page {page} of {totalPages}
             </p>
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
               >
-                Prev
+                Previous
               </Button>
               <Button
                 variant="outline"
@@ -230,7 +267,16 @@ export default function SeoManagementClient({ initialData = [] }) {
         )}
       </div>
 
-      {/* Delete Confirmation Dialog */}
+      <SeoSheet
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        initialData={selectedSeo}
+        onSuccess={() => {
+          setIsOpen(false);
+          router.refresh();
+        }}
+      />
+
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -247,5 +293,257 @@ export default function SeoManagementClient({ initialData = [] }) {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+  );
+}
+
+function SeoSheet({ open, onOpenChange, initialData, onSuccess }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEdit = !!initialData;
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      key: "",
+      title: "",
+      description: "",
+      keywords: "",
+      cover: "",
+      link: "",
+      robots: "index, follow",
+      isActive: true,
+    },
+  });
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        key: initialData?.key || "",
+        title: initialData?.title || "",
+        description: initialData?.description || "",
+        keywords: initialData?.keywords || "",
+        cover: initialData?.cover || "",
+        link: initialData?.link || "",
+        robots: initialData?.robots || "index, follow",
+        isActive: initialData?.isActive ?? true,
+      });
+    }
+  }, [open, initialData, reset]);
+
+  const description = useWatch({ control, name: "description" }) || "";
+
+  const onSubmit = async (data) => {
+    try {
+      setIsSubmitting(true);
+      let result;
+      if (isEdit) {
+        result = await updateSeoSettings(initialData._id, data);
+      } else {
+        result = await saveSeoSettings(data);
+      }
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save SEO entry");
+      }
+
+      toast.success(`SEO entry ${isEdit ? "updated" : "created"} successfully`);
+      onSuccess();
+    } catch (error) {
+      console.error("Error saving SEO entry:", error);
+      toast.error(error.message || "Failed to save SEO entry");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="">
+        <SheetHeader>
+          <SheetTitle>{isEdit ? "Edit SEO" : "New SEO"}</SheetTitle>
+          <SheetDescription>
+            {isEdit ? "Update existing SEO data." : "Add new SEO metadata."}
+          </SheetDescription>
+        </SheetHeader>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-6 overflow-y-auto px-4"
+        >
+          <Controller
+            control={control}
+            name="key"
+            rules={{ required: "Key is required" }}
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Key</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    placeholder="e.g. home_page"
+                    disabled={isEdit}
+                  />
+                  <FieldDescription>
+                    The unique identifier for this SEO record.
+                  </FieldDescription>
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="title"
+            rules={{ required: "Title is required" }}
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Title</FieldLabel>
+                <FieldContent>
+                  <Input {...field} placeholder="Enter page title" />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="description"
+            rules={{ required: "Description is required", maxLength: { value: 160, message: "Max 160 characters" } }}
+            render={({ field, fieldState }) => (
+              <Field>
+                <div className="flex items-center justify-between">
+                  <FieldLabel>Description</FieldLabel>
+                  <span className="font-mono text-[10px] text-muted-foreground">
+                    {description.length}/160
+                  </span>
+                </div>
+                <FieldContent>
+                  <Textarea
+                    {...field}
+                    placeholder="Brief description..."
+                    className="min-h-[100px]"
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <Controller
+              control={control}
+              name="robots"
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>Robots</FieldLabel>
+                  <FieldContent>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select robots" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="index, follow">index, follow</SelectItem>
+                        <SelectItem value="noindex, follow">noindex, follow</SelectItem>
+                        <SelectItem value="index, nofollow">index, nofollow</SelectItem>
+                        <SelectItem value="noindex, nofollow">noindex, nofollow</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FieldError errors={[fieldState.error]} />
+                  </FieldContent>
+                </Field>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="isActive"
+              render={({ field }) => (
+                <Field>
+                  <FieldLabel>Status</FieldLabel>
+                  <FieldContent>
+                    <div className="flex h-8 items-center gap-2 rounded-md border p-2">
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        size="sm"
+                      />
+                      <span className="text-xs">Active</span>
+                    </div>
+                  </FieldContent>
+                </Field>
+              )}
+            />
+          </div>
+
+          <Controller
+            control={control}
+            name="link"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Canonical URL</FieldLabel>
+                <FieldContent>
+                  <Input {...field} placeholder="https://..." />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="cover"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Image Link</FieldLabel>
+                <FieldContent>
+                  <Input {...field} placeholder="https://..." />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="keywords"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Keywords</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    placeholder="keyword1, keyword2, keyword3"
+                  />
+                  <FieldDescription>Separate with commas.</FieldDescription>
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <SheetFooter className="mt-4 px-0">
+            <SheetClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </SheetClose>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                isEdit ? "Save Changes" : "Create SEO"
+              )}
+            </Button>
+          </SheetFooter>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 }

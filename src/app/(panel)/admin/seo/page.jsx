@@ -3,6 +3,8 @@ import { UnifiedHeader } from "@/components/panel/unified-header";
 import { generateSeoMetadataServer } from "@/lib/seo";
 import SeoManagementClient from "./SeoManagementClient";
 
+export const dynamic = "force-dynamic";
+
 export const generateMetadata = async () => {
   return await generateSeoMetadataServer("admin_seo_page", {
     title: "SEO Management",

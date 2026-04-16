@@ -1,11 +1,11 @@
-import * as React from "react";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
-import { Slot } from "radix-ui";
+import * as React from "react"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
+import { Slot } from "radix-ui"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Breadcrumb({ ...props }) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
 }
 
 function BreadcrumbList({ className, ...props }) {
@@ -14,11 +14,11 @@ function BreadcrumbList({ className, ...props }) {
       data-slot="breadcrumb-list"
       className={cn(
         "flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbItem({ className, ...props }) {
@@ -28,11 +28,15 @@ function BreadcrumbItem({ className, ...props }) {
       className={cn("inline-flex items-center gap-1.5", className)}
       {...props}
     />
-  );
+  )
 }
 
-function BreadcrumbLink({ asChild, className, ...props }) {
-  const Comp = asChild ? Slot.Root : "a";
+function BreadcrumbLink({
+  asChild,
+  className,
+  ...props
+}) {
+  const Comp = asChild ? Slot.Root : "a"
 
   return (
     <Comp
@@ -40,7 +44,7 @@ function BreadcrumbLink({ asChild, className, ...props }) {
       className={cn("transition-colors hover:text-foreground", className)}
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbPage({ className, ...props }) {
@@ -53,10 +57,14 @@ function BreadcrumbPage({ className, ...props }) {
       className={cn("font-normal text-foreground", className)}
       {...props}
     />
-  );
+  )
 }
 
-function BreadcrumbSeparator({ children, className, ...props }) {
+function BreadcrumbSeparator({
+  children,
+  className,
+  ...props
+}) {
   return (
     <li
       data-slot="breadcrumb-separator"
@@ -67,10 +75,13 @@ function BreadcrumbSeparator({ children, className, ...props }) {
     >
       {children ?? <ChevronRight />}
     </li>
-  );
+  )
 }
 
-function BreadcrumbEllipsis({ className, ...props }) {
+function BreadcrumbEllipsis({
+  className,
+  ...props
+}) {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -82,7 +93,7 @@ function BreadcrumbEllipsis({ className, ...props }) {
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More</span>
     </span>
-  );
+  )
 }
 
 export {
@@ -93,4 +104,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-};
+}

@@ -11,13 +11,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -31,7 +29,7 @@ import {
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const resetPasswordSchema = z
@@ -58,7 +56,7 @@ export const ResetPasswordForm = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const form = useForm({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       password: "",
@@ -124,101 +122,99 @@ export const ResetPasswordForm = () => {
             </AlertDescription>
           </Alert>
         )}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        disabled={isLoading || success || !token}
-                        placeholder="********"
-                        className="pr-10"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <Controller
+            control={control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>New Password</FieldLabel>
+                <FieldContent>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      disabled={isLoading || !!success || !token}
+                      placeholder="********"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        disabled={isLoading || success || !token}
-                        placeholder="********"
-                        className="pr-10"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Confirm Password</FieldLabel>
+                <FieldContent>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      disabled={isLoading || !!success || !token}
+                      placeholder="********"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-            <div className="space-y-4">
-              <Button
-                type="submit"
-                disabled={isLoading || success || !token}
-                className="w-full"
+          <div className="space-y-4">
+            <Button
+              type="submit"
+              disabled={isLoading || !!success || !token}
+              className="w-full"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Reset Password"
+              )}
+            </Button>
+            <div className="text-center text-sm">
+              <Link
+                href="/login"
+                className="inline-flex items-center text-muted-foreground hover:underline"
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Updating...
-                  </>
-                ) : (
-                  "Reset Password"
-                )}
-              </Button>
-              <div className="text-center text-sm">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center text-muted-foreground hover:underline"
-                >
-                  <ChevronLeft className="mr-1 h-3 w-3" />
-                  Back to login
-                </Link>
-              </div>
+                <ChevronLeft className="mr-1 h-3 w-3" />
+                Back to login
+              </Link>
             </div>
-          </form>
-        </Form>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );

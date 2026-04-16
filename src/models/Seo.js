@@ -42,7 +42,7 @@ const seoSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true, versionKey: false },
+  { timestamps: true, versionKey: false, collection: "seo" },
 );
 
 const Seo = mongoose.models.Seo || mongoose.model("Seo", seoSchema);

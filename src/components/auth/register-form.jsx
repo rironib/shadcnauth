@@ -12,20 +12,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -51,7 +49,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const form = useForm({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
@@ -105,134 +103,132 @@ export function RegisterForm() {
             </AlertDescription>
           </Alert>
         )}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <SocialLogin />
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <SocialLogin />
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
             </div>
-
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="John Doe"
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value
-                          .toLowerCase()
-                          .replace(/[^a-z0-9_]/g, "");
-                        field.onChange(value);
-                      }}
-                      placeholder="johndoe"
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="m@example.com"
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        disabled={isLoading}
-                        placeholder="********"
-                        className="pr-10"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="space-y-4">
-              <Button type="submit" disabled={isLoading} className="w-full">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating Account...
-                  </>
-                ) : (
-                  "Sign Up"
-                )}
-              </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="hover:underline">
-                  Sign in
-                </Link>
-              </p>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
-          </form>
-        </Form>
+          </div>
+
+          <Controller
+            control={control}
+            name="name"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Full Name</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    placeholder="John Doe"
+                    disabled={isLoading}
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="username"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Username</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9_]/g, "");
+                      field.onChange(value);
+                    }}
+                    placeholder="johndoe"
+                    disabled={isLoading}
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Email</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="m@example.com"
+                    disabled={isLoading}
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Password</FieldLabel>
+                <FieldContent>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      disabled={isLoading}
+                      placeholder="********"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <div className="space-y-4">
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link href="/login" className="hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );

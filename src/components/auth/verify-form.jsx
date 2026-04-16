@@ -11,20 +11,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, ChevronLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const verifySchema = z.object({
@@ -38,7 +36,7 @@ export const VerifyUserForm = () => {
   const searchParams = useSearchParams();
   const tokenFromUrl = searchParams.get("token") || "";
 
-  const form = useForm({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(verifySchema),
     defaultValues: {
       token: tokenFromUrl,
@@ -87,53 +85,51 @@ export const VerifyUserForm = () => {
             </AlertDescription>
           </Alert>
         )}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="token"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Verification Token</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Enter your token"
-                      disabled={isLoading || success}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <Controller
+            control={control}
+            name="token"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Verification Token</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    placeholder="Enter your token"
+                    disabled={isLoading || !!success}
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-            <div className="space-y-4">
-              <Button
-                type="submit"
-                disabled={isLoading || success}
-                className="w-full"
+          <div className="space-y-4">
+            <Button
+              type="submit"
+              disabled={isLoading || !!success}
+              className="w-full"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                "Verify Email"
+              )}
+            </Button>
+            <div className="text-center text-sm">
+              <Link
+                href="/login"
+                className="inline-flex items-center text-muted-foreground hover:underline"
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  "Verify Email"
-                )}
-              </Button>
-              <div className="text-center text-sm">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center text-muted-foreground hover:underline"
-                >
-                  <ChevronLeft className="mr-1 h-3 w-3" />
-                  Back to login
-                </Link>
-              </div>
+                <ChevronLeft className="mr-1 h-3 w-3" />
+                Back to login
+              </Link>
             </div>
-          </form>
-        </Form>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );

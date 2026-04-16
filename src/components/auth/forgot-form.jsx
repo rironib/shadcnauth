@@ -11,19 +11,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, ChevronLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const forgotSchema = z.object({
@@ -35,7 +33,7 @@ export function ForgotForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(forgotSchema),
     defaultValues: {
       email: "",
@@ -86,54 +84,52 @@ export function ForgotForm() {
             </AlertDescription>
           </Alert>
         )}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="m@example.com"
-                      disabled={isLoading || success}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel>Email</FieldLabel>
+                <FieldContent>
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="m@example.com"
+                    disabled={isLoading || !!success}
+                  />
+                  <FieldError errors={[fieldState.error]} />
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-            <div className="space-y-4">
-              <Button
-                type="submit"
-                disabled={isLoading || success}
-                className="w-full"
+          <div className="space-y-4">
+            <Button
+              type="submit"
+              disabled={isLoading || !!success}
+              className="w-full"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending Link...
+                </>
+              ) : (
+                "Send Reset Link"
+              )}
+            </Button>
+            <div className="text-center text-sm">
+              <Link
+                href="/login"
+                className="inline-flex items-center text-muted-foreground hover:underline"
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending Link...
-                  </>
-                ) : (
-                  "Send Reset Link"
-                )}
-              </Button>
-              <div className="text-center text-sm">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center text-muted-foreground hover:underline"
-                >
-                  <ChevronLeft className="mr-1 h-3 w-3" />
-                  Back to login
-                </Link>
-              </div>
+                <ChevronLeft className="mr-1 h-3 w-3" />
+                Back to login
+              </Link>
             </div>
-          </form>
-        </Form>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );
