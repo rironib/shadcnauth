@@ -1,0 +1,209 @@
+[
+  {
+    "key": "home",
+    "link": "/",
+    "title": "ShadcnUI Auth - Premium Next.js Authentication Starter Kit",
+    "description": "The ultimate authentication starter kit built with Next.js 15, Shadcn UI, and MongoDB.",
+    "keywords": "nextjs, authentication, shadcnui, mongodb, mongoose, nextauth",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "contact",
+    "link": "/page/contact",
+    "title": "Contact Us",
+    "description": "Have a question or want to work together? Reach out to the ShadcnAuth team. We're here to help you with your authentication and user management needs.",
+    "keywords": "contact, support, shadcnauth",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "login_page",
+    "link": "/login",
+    "title": "Login - ShadcnUI Auth",
+    "description": "Login to your account to continue.",
+    "keywords": "login, signin, authentication",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "register_page",
+    "link": "/register",
+    "title": "Sign up - ShadcnUI Auth",
+    "description": "Create an account to continue.",
+    "keywords": "register, signup, authentication",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "forgot_password_page",
+    "link": "/forgot-password",
+    "title": "Forgot Password - ShadcnUI Auth",
+    "description": "Forgot your password? No problem. Just let us know your email address and we will email you a link to reset your password.",
+    "keywords": "forgot password, recovery, security",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "reset_password_page",
+    "link": "/reset-password",
+    "title": "Reset Password",
+    "description": "Reset your password to continue.",
+    "keywords": "reset password, security",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "verify_email_page",
+    "link": "/verify",
+    "title": "User verification - ShadcnUI Auth",
+    "description": "Verify your email address to continue.",
+    "keywords": "verification, email, security",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "user_dashboard_page",
+    "link": "/dashboard",
+    "title": "User Dashboard - ShadcnUI Auth",
+    "description": "Manage your account and settings.",
+    "keywords": "dashboard, user profile, account management",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "user_profile_page",
+    "link": "/dashboard/profile",
+    "title": "My Profile",
+    "description": "View and manage your public profile.",
+    "keywords": "profile, user info",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "user_profile_edit_page",
+    "link": "/dashboard/profile/edit",
+    "title": "Edit Profile",
+    "description": "Update your forum bio, country, website, and social media links.",
+    "keywords": "edit profile, user settings",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "user_settings_page",
+    "link": "/dashboard/settings",
+    "title": "Account Settings",
+    "description": "Manage your account preferences and security settings.",
+    "keywords": "settings, security, privacy",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "moderator_overview",
+    "link": "/moderator",
+    "title": "Moderator Dashboard - ShadcnUI Auth",
+    "description": "Moderator dashboard overview and quick actions.",
+    "keywords": "moderation, dashboard",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "moderator_activity",
+    "link": "/moderator/activity",
+    "title": "Moderation Logs - ShadcnUI Auth",
+    "description": "Audit trails of all moderation actions.",
+    "keywords": "moderation, activity logs",
+    "robots": "index, follow",
+    "isActive": true
+  },
+  {
+    "key": "admin_dashboard_page",
+    "link": "/admin",
+    "title": "Admin Dashboard - ShadcnUI Auth",
+    "description": "Admin control panel for managing reports and system settings.",
+    "keywords": "admin, dashboard, management",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_analytics_page",
+    "link": "/admin/analytics",
+    "title": "Analytics",
+    "description": "View community statistics and trends.",
+    "keywords": "analytics, stats, trends",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_members_page",
+    "link": "/admin/users",
+    "title": "Member Management",
+    "description": "View and manage all forum members.",
+    "keywords": "member management, users",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_pages_page",
+    "link": "/admin/pages",
+    "title": "Pages",
+    "description": "Manage static pages and content.",
+    "keywords": "cms, pages, content management",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_pages_new_page",
+    "link": "/admin/pages/new",
+    "title": "Create CMS Page",
+    "description": "Add a new static page to the website.",
+    "keywords": "cms, pages, new content",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_pages_update_page",
+    "link": "/admin/pages/update",
+    "title": "Update CMS Page",
+    "description": "Modify existing static page content and settings.",
+    "keywords": "cms, pages, edit content",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_seo_page",
+    "link": "/admin/seo",
+    "title": "SEO Management",
+    "description": "Configure and manage SEO metadata for all community pages.",
+    "keywords": "seo, metadata, management",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_seo_new_page",
+    "link": "/admin/seo/new",
+    "title": "Create SEO Entry - Admin Dashboard",
+    "description": "Define metadata and search engine indexing rules for a new community page.",
+    "keywords": "seo, new metadata",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_seo_edit_page",
+    "link": "/admin/seo/[id]",
+    "title": "Edit SEO Entry",
+    "description": "Modify SEO metadata and canonical settings for an existing page.",
+    "keywords": "seo, edit metadata",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  },
+  {
+    "key": "admin_settings_page",
+    "link": "/admin/settings",
+    "title": "Site Settings",
+    "description": "Configure global site settings and preferences.",
+    "keywords": "admin, site settings",
+    "robots": "noindex, nofollow",
+    "isActive": true
+  }
+]

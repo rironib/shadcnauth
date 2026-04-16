@@ -20,18 +20,21 @@
 - **Database:** MongoDB (Mongoose 9.0.2)
 - **Auth:** NextAuth.js 4.24.13 (Credentials & Social)
 - **Styling:** Tailwind CSS v4 (@tailwindcss/postcss)
-- **Package Manager:** **Yarn (Strictly enforced)**
-- **Aliases:** `@/*` maps to `./*`
+- **Package Manager:** **Bun** (Strictly enforced)
+- **Aliases:** `@/*` maps to `./src/*`
 
 ### Directory Map
 
-- `app/`: Next.js App Router (pages/layouts/api)
-- `components/`: UI and layout components
-- `lib/`: Shared utilities and core logic
-- `actions/`: Next.js Server Actions (Data mutations)
-- `models/`: Mongoose database models
-- `config/`: Static configuration and site metadata
+- `src/`: Consolidated source directory
+  - `src/app/`: Next.js App Router (pages/layouts/api)
+  - `src/components/`: UI and layout components
+  - `src/lib/`: Shared utilities and core logic
+  - `src/actions/`: Next.js Server Actions (Data mutations)
+  - `src/models/`: Mongoose database models
+  - `src/config/`: Static configuration and site metadata
+  - `src/proxy.js`: Security gatekeeper and route protection
 - `public/`: Static assets and SEO fallbacks
+- `backup/`: Database backup and seeding files
 - `.agent/`: Agent-specific documentation and state
 
 ---
@@ -56,6 +59,7 @@
 - ❌ **NEVER** Use Class Components or `var` keyword.
 - ❌ **NEVER** Mutate Props Directly.
 - ❌ **NEVER** Implement "Unlike" functionality for Threads or Posts. Engagement is one-way only.
+- ❌ **NEVER RENAME `proxy.js` to any other name (e.g., `middleware.js`).** The filename must remain strictly `proxy.js` for architectural reasons.
 
 ---
 
@@ -65,7 +69,7 @@
 
 - **Server Actions:** Most data mutations and fetches should use Server Actions in `actions/`.
 - **Consistent Responses:** Return objects: `{ success: boolean, data?: any, error?: string }`.
-- **Security Gatekeeper:** Route protection, RBAC, and security headers are centralized in `proxy.js`.
+- **Security Gatekeeper:** Route protection, RBAC, and security headers are centralized in `src/proxy.js`. Do not rename this file.
 - **Hierarchical Access:** Admin > Moderator > User. Access rules are defined in `DASHBOARD_ACCESS` and `API_ACCESS`.
 
 ### Database (Mongoose / MongoDB)

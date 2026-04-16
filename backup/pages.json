@@ -1,0 +1,26 @@
+[
+  {
+    "_id": {
+      "$oid": "69c13c0d2e2d841096fa9859"
+    },
+    "title": "About us",
+    "slug": "about-us",
+    "content": "TrickBuzz is a Saas app for Developers...",
+    "authorId": {
+      "$oid": "68f8d2bd26f71a914933f03e"
+    },
+    "status": "published",
+    "featuredImage": "",
+    "seo": {
+      "metaTitle": "",
+      "metaDescription": "",
+      "keywords": []
+    },
+    "createdAt": {
+      "$date": "2026-03-23T13:11:41.859Z"
+    },
+    "updatedAt": {
+      "$date": "2026-03-23T13:11:41.859Z"
+    }
+  }
+]

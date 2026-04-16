@@ -1,0 +1,65 @@
+[
+  {
+    "_id": {
+      "$oid": "697229365c74e72fea7c0668"
+    },
+    "name": "Admin",
+    "username": "admin",
+    "email": "admin@email.com",
+    "password": "$2b$10$hb4cgTGCcSuwlXmJZon60uA3Ixlz0PyOkY/ksrHwSAnpBOLy732nG",
+    "role": "admin",
+    "country": "BD",
+    "status": "active",
+    "emailVerified": {
+      "$date": "2026-01-23T07:47:29.475Z"
+    },
+    "createdAt": {
+      "$date": "2026-01-01T06:34:07.907Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-16T18:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "697229365c74e72fea7c0669"
+    },
+    "name": "Moderator",
+    "username": "moderator",
+    "email": "moderator@email.com",
+    "password": "$2b$10$hb4cgTGCcSuwlXmJZon60uA3Ixlz0PyOkY/ksrHwSAnpBOLy732nG",
+    "role": "moderator",
+    "country": "US",
+    "status": "active",
+    "emailVerified": {
+      "$date": "2026-01-23T07:47:29.475Z"
+    },
+    "createdAt": {
+      "$date": "2026-01-01T06:34:07.907Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-16T18:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69730da292dc30df185d621f"
+    },
+    "name": "User",
+    "email": "user@email.com",
+    "password": "$2b$10$hb4cgTGCcSuwlXmJZon60uA3Ixlz0PyOkY/ksrHwSAnpBOLy732nG",
+    "username": "user",
+    "role": "user",
+    "country": "GB",
+    "status": "active",
+    "emailVerified": {
+      "$date": "2026-01-23T07:47:29.499Z"
+    },
+    "createdAt": {
+      "$date": "2026-01-23T05:56:50.036Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-16T18:00:00.000Z"
+    }
+  }
+]

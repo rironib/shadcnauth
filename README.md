@@ -16,6 +16,7 @@ ShadcnUI Auth is a high-performance, ready-to-use authentication starter kit bui
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [🎯 Purpose](#-purpose)
+- [🔑 Demo Access](#-demo-access)
 
 ---
 
@@ -28,7 +29,7 @@ The application is built on a modern tech stack prioritized for security, speed,
 - **Database**: [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/) (Credentials and Social Providers)
 - **State & Forms**: React Hook Form, Zod
-- **Monitoring**: Google Tag Manager integration
+- **Monitoring**: Google Analytics integration
 - **Messaging**: [Resend](https://resend.com/) for transactional emails
 - **Icons**: [Lucide React](https://lucide.dev/)
 
@@ -64,7 +65,7 @@ The application is built on a modern tech stack prioritized for security, speed,
 
 ## 🏗 Project Structure
 
-- `proxy.js`: Security gatekeeper and route protection.
+- `src/proxy.js`: Security gatekeeper and route protection.
 - `actions/`: Centralized Server Actions for auth, admin, and user operations.
 - `app/`: Next.js App Router (Pages, layouts, and API endpoints).
 - `components/`: Modular building blocks (Shadcn UI primitives + custom features).
@@ -123,3 +124,15 @@ The application is built on a modern tech stack prioritized for security, speed,
 ## 🎯 Purpose
 
 ShadcnUI Auth aims to redefine the "Starter Kit" experience by providing more than just a login page. It's a **fully-fledged system** with a minimalist, premium aesthetic and enterprise-grade architecture. It handles the "boring" parts of web development so you can start building your actual product immediately.
+
+---
+
+## 🔑 Demo Access
+
+For testing purposes, you can use the following accounts (all use the same password):
+
+| Role          | Email                 | Password      |
+| ------------- | --------------------- | ------------- |
+| **Admin**     | `admin@email.com`     | `password123` |
+| **Moderator** | `moderator@email.com` | `password123` |
+| **User**      | `user@email.com`      | `password123` |
