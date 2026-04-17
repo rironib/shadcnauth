@@ -8,12 +8,11 @@ import { format } from "date-fns";
 import {
   Calendar,
   Edit2,
-  Github,
   Globe,
   Loader2,
   MapPin,
-  Twitter,
 } from "lucide-react";
+import { RiGithubFill, RiTwitterFill } from "@/lib/icons";
 import Link from "next/link";
 import countries from "next-countries";
 import { gravatar } from "next-gravatar";
@@ -164,7 +163,7 @@ export default function ProfileViewClient() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 font-medium transition-colors hover:text-primary"
                     >
-                      <Twitter className="h-3.5 w-3.5" />@
+                      <RiTwitterFill className="h-3.5 w-3.5" />@
                       {profileData.socialLinks.twitter.replace(/^@/, "")}
                     </a>
                   )}
@@ -175,7 +174,7 @@ export default function ProfileViewClient() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 font-medium transition-colors hover:text-primary"
                     >
-                      <Github className="h-3.5 w-3.5" />
+                      <RiGithubFill className="h-3.5 w-3.5" />
                       {profileData.socialLinks.github}
                     </a>
                   )}
