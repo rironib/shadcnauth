@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 ## [1.1.0] - 2026-04-18
 
 ### Added
+
 - **Inquiry Management Module**: Renamed the legacy "Contact" system to a fully featured "Inquiry" module.
 - **Inquiry Archiving**: Implemented a streamlined "New -> Read -> Archived" lifecycle for user messages.
 - **Admin UI Overhaul**: Upgraded management interfaces to fully utilize `shadcn/ui` standards, replacing heavy Modals and Dropdowns with elegant Side Sheets and pure Grid layouts.
 - **React 19 Compatibility**: Fixed Hook execution loops and purity issues across components (`InquiriesClient`, `sidebar.jsx`).
 
 ### Changed
+
 - **SEO Management**: Refactored the SEO admin interface to use standard controlled components instead of standard `react-hook-form` dependencies for a lighter client profile.
 - Escaped JSX entities correctly in empty-state descriptions.
 
