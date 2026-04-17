@@ -1,7 +1,7 @@
 "use server";
 
 import { authOptions } from "@/lib/auth";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";

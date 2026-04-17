@@ -1,5 +1,5 @@
 import { MarkdownRenderer } from "@/components/app/markdown-renderer";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import Page from "@/models/Page";
 import { format } from "date-fns";
 import * as LucideIcons from "lucide-react";

@@ -1,28 +1,32 @@
-import { cva } from "class-variance-authority"
+import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils"
 
-function Empty({ className, ...props }) {
+function Empty({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="empty"
       className={cn(
-        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl border-dashed p-6 text-center text-balance",
+        "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12",
         className
       )}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
-function EmptyHeader({ className, ...props }) {
+function EmptyHeader({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="empty-header"
-      className={cn("flex max-w-sm flex-col items-center gap-2", className)}
-      {...props}
-    />
-  )
+      className={cn("flex max-w-sm flex-col items-center gap-2 text-center", className)}
+      {...props} />
+  );
 }
 
 const emptyMediaVariants = cva(
@@ -31,7 +35,7 @@ const emptyMediaVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
-        icon: "flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-4",
+        icon: "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
       },
     },
     defaultVariants: {
@@ -50,25 +54,26 @@ function EmptyMedia({
       data-slot="empty-icon"
       data-variant={variant}
       className={cn(emptyMediaVariants({ variant, className }))}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
-function EmptyTitle({ className, ...props }) {
+function EmptyTitle({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="empty-title"
-      className={cn(
-        "cn-font-heading text-sm font-medium tracking-tight",
-        className
-      )}
-      {...props}
-    />
-  )
+      className={cn("text-lg font-medium tracking-tight", className)}
+      {...props} />
+  );
 }
 
-function EmptyDescription({ className, ...props }) {
+function EmptyDescription({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="empty-description"
@@ -76,22 +81,23 @@ function EmptyDescription({ className, ...props }) {
         "text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         className
       )}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
-function EmptyContent({ className, ...props }) {
+function EmptyContent({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="empty-content"
       className={cn(
-        "flex w-full max-w-sm min-w-0 flex-col items-center gap-2.5 text-sm text-balance",
+        "flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance",
         className
       )}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
 export {

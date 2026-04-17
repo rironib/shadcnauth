@@ -1,4 +1,4 @@
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import { env } from "@/lib/validateEnv";
 import User from "@/models/User";
 import { compare } from "bcryptjs";

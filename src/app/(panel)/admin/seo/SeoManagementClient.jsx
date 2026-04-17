@@ -67,7 +67,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function SeoManagementClient({ initialData = [] }) {
@@ -132,7 +131,7 @@ export default function SeoManagementClient({ initialData = [] }) {
 
   return (
     <main className="app-container">
-      <div className="mb-6 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-end">
+      <div className="flex flex-col justify-between gap-4 pb-4 border-b mb-0 sm:flex-row sm:items-end">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">
             SEO Management
@@ -146,8 +145,7 @@ export default function SeoManagementClient({ initialData = [] }) {
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 py-4">
-        <div className="relative max-w-sm flex-1">
+        <div className="relative max-w-sm mb-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
@@ -157,9 +155,8 @@ export default function SeoManagementClient({ initialData = [] }) {
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-9 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
-      </div>
 
-      <div className="rounded-md border">
+      <div className="w-full rounded-md border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -168,7 +165,7 @@ export default function SeoManagementClient({ initialData = [] }) {
               <TableHead>Meta Details</TableHead>
               <TableHead className="text-center">Visibility</TableHead>
               <TableHead>Updated</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -200,8 +197,8 @@ export default function SeoManagementClient({ initialData = [] }) {
                       {seo.key}
                     </code>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
+                  <TableCell className="max-w-[300px] whitespace-normal">
+                    <div className="space-y-1">
                       <span className="font-medium">{seo.title}</span>
                       <span className="text-xs text-muted-foreground line-clamp-1">
                         {seo.description}
@@ -217,10 +214,12 @@ export default function SeoManagementClient({ initialData = [] }) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground text-xs">
-                    {new Date(seo.updatedAt).toLocaleDateString()}
+                    {seo.updatedAt || seo.createdAt
+                      ? new Date(seo.updatedAt || seo.createdAt).toLocaleDateString()
+                      : "—"}
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
+                    <div className="flex justify-end gap-1 whitespace-nowrap">
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleOpenEdit(seo)}>
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -300,29 +299,22 @@ function SeoSheet({ open, onOpenChange, initialData, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isEdit = !!initialData;
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      key: "",
-      title: "",
-      description: "",
-      keywords: "",
-      cover: "",
-      link: "",
-      robots: "index, follow",
-      isActive: true,
-    },
+  const [formData, setFormData] = useState({
+    key: "",
+    title: "",
+    description: "",
+    keywords: "",
+    cover: "",
+    link: "",
+    robots: "index, follow",
+    isActive: true,
   });
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (open) {
-      reset({
+      setFormData({
         key: initialData?.key || "",
         title: initialData?.title || "",
         description: initialData?.description || "",
@@ -332,19 +324,43 @@ function SeoSheet({ open, onOpenChange, initialData, onSuccess }) {
         robots: initialData?.robots || "index, follow",
         isActive: initialData?.isActive ?? true,
       });
+      setErrors({});
     }
-  }, [open, initialData, reset]);
+  }, [open, initialData]);
 
-  const description = useWatch({ control, name: "description" }) || "";
+  const handleChange = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
 
-  const onSubmit = async (data) => {
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.key) newErrors.key = { message: "Key is required" };
+    if (!formData.title) newErrors.title = { message: "Title is required" };
+    if (!formData.description) newErrors.description = { message: "Description is required" };
+    else if (formData.description.length > 160) newErrors.description = { message: "Max 160 characters" };
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
     try {
       setIsSubmitting(true);
       let result;
       if (isEdit) {
-        result = await updateSeoSettings(initialData._id, data);
+        result = await updateSeoSettings(initialData._id, formData);
       } else {
-        result = await saveSeoSettings(data);
+        result = await saveSeoSettings(formData);
       }
 
       if (!result.success) {
@@ -363,171 +379,137 @@ function SeoSheet({ open, onOpenChange, initialData, onSuccess }) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle>{isEdit ? "Edit SEO" : "New SEO"}</SheetTitle>
           <SheetDescription>
             {isEdit ? "Update existing SEO data." : "Add new SEO metadata."}
           </SheetDescription>
         </SheetHeader>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-6 overflow-y-auto px-4"
-        >
-          <Controller
-            control={control}
-            name="key"
-            rules={{ required: "Key is required" }}
-            render={({ field, fieldState }) => (
+        <form onSubmit={onSubmit} className="overflow-y-auto">
+          <div className="grid flex-1 auto-rows-min gap-3 px-4">
+            <Field>
+              <FieldLabel>Key</FieldLabel>
+              <FieldContent>
+                <Input
+                  value={formData.key}
+                  onChange={(e) => handleChange("key", e.target.value)}
+                  placeholder="e.g. home_page"
+                  disabled={isEdit}
+                />
+                <FieldDescription>
+                  The unique identifier for this SEO record.
+                </FieldDescription>
+                <FieldError errors={[errors.key]} />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel>Title</FieldLabel>
+              <FieldContent>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => handleChange("title", e.target.value)}
+                  placeholder="Enter page title"
+                />
+                <FieldError errors={[errors.title]} />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel>Description</FieldLabel>
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  {formData.description.length}/160
+                </span>
+              </div>
+              <FieldContent>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e) => handleChange("description", e.target.value)}
+                  placeholder="Brief description..."
+                  className="min-h-[100px]"
+                />
+                <FieldError errors={[errors.description]} />
+              </FieldContent>
+            </Field>
+
+            <div className="grid grid-cols-2 gap-4">
               <Field>
-                <FieldLabel>Key</FieldLabel>
+                <FieldLabel>Robots</FieldLabel>
                 <FieldContent>
-                  <Input
-                    {...field}
-                    placeholder="e.g. home_page"
-                    disabled={isEdit}
-                  />
-                  <FieldDescription>
-                    The unique identifier for this SEO record.
-                  </FieldDescription>
-                  <FieldError errors={[fieldState.error]} />
+                  <Select
+                    onValueChange={(value) => handleChange("robots", value)}
+                    value={formData.robots}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select robots" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="index, follow">index, follow</SelectItem>
+                      <SelectItem value="noindex, follow">noindex, follow</SelectItem>
+                      <SelectItem value="index, nofollow">index, nofollow</SelectItem>
+                      <SelectItem value="noindex, nofollow">noindex, nofollow</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FieldError errors={[errors.robots]} />
                 </FieldContent>
               </Field>
-            )}
-          />
 
-          <Controller
-            control={control}
-            name="title"
-            rules={{ required: "Title is required" }}
-            render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Title</FieldLabel>
+                <FieldLabel>Status</FieldLabel>
                 <FieldContent>
-                  <Input {...field} placeholder="Enter page title" />
-                  <FieldError errors={[fieldState.error]} />
+                  <div className="flex h-8 items-center gap-2 rounded-md border p-2">
+                    <Switch
+                      checked={formData.isActive}
+                      onCheckedChange={(checked) => handleChange("isActive", checked)}
+                      size="sm"
+                    />
+                    <span className="text-xs">Active</span>
+                  </div>
                 </FieldContent>
               </Field>
-            )}
-          />
+            </div>
 
-          <Controller
-            control={control}
-            name="description"
-            rules={{ required: "Description is required", maxLength: { value: 160, message: "Max 160 characters" } }}
-            render={({ field, fieldState }) => (
-              <Field>
-                <div className="flex items-center justify-between">
-                  <FieldLabel>Description</FieldLabel>
-                  <span className="font-mono text-[10px] text-muted-foreground">
-                    {description.length}/160
-                  </span>
-                </div>
-                <FieldContent>
-                  <Textarea
-                    {...field}
-                    placeholder="Brief description..."
-                    className="min-h-[100px]"
-                  />
-                  <FieldError errors={[fieldState.error]} />
-                </FieldContent>
-              </Field>
-            )}
-          />
+            <Field>
+              <FieldLabel>Canonical URL</FieldLabel>
+              <FieldContent>
+                <Input
+                  value={formData.link}
+                  onChange={(e) => handleChange("link", e.target.value)}
+                  placeholder="https://..."
+                />
+                <FieldError errors={[errors.link]} />
+              </FieldContent>
+            </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Controller
-              control={control}
-              name="robots"
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel>Robots</FieldLabel>
-                  <FieldContent>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select robots" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="index, follow">index, follow</SelectItem>
-                        <SelectItem value="noindex, follow">noindex, follow</SelectItem>
-                        <SelectItem value="index, nofollow">index, nofollow</SelectItem>
-                        <SelectItem value="noindex, nofollow">noindex, nofollow</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FieldError errors={[fieldState.error]} />
-                  </FieldContent>
-                </Field>
-              )}
-            />
+            <Field>
+              <FieldLabel>Image Link</FieldLabel>
+              <FieldContent>
+                <Input
+                  value={formData.cover}
+                  onChange={(e) => handleChange("cover", e.target.value)}
+                  placeholder="https://..."
+                />
+                <FieldError errors={[errors.cover]} />
+              </FieldContent>
+            </Field>
 
-            <Controller
-              control={control}
-              name="isActive"
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel>Status</FieldLabel>
-                  <FieldContent>
-                    <div className="flex h-8 items-center gap-2 rounded-md border p-2">
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        size="sm"
-                      />
-                      <span className="text-xs">Active</span>
-                    </div>
-                  </FieldContent>
-                </Field>
-              )}
-            />
+            <Field>
+              <FieldLabel>Keywords</FieldLabel>
+              <FieldContent>
+                <Input
+                  value={formData.keywords}
+                  onChange={(e) => handleChange("keywords", e.target.value)}
+                  placeholder="keyword1, keyword2, keyword3"
+                />
+                <FieldDescription>Separate with commas.</FieldDescription>
+                <FieldError errors={[errors.keywords]} />
+              </FieldContent>
+            </Field>
           </div>
 
-          <Controller
-            control={control}
-            name="link"
-            render={({ field, fieldState }) => (
-              <Field>
-                <FieldLabel>Canonical URL</FieldLabel>
-                <FieldContent>
-                  <Input {...field} placeholder="https://..." />
-                  <FieldError errors={[fieldState.error]} />
-                </FieldContent>
-              </Field>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="cover"
-            render={({ field, fieldState }) => (
-              <Field>
-                <FieldLabel>Image Link</FieldLabel>
-                <FieldContent>
-                  <Input {...field} placeholder="https://..." />
-                  <FieldError errors={[fieldState.error]} />
-                </FieldContent>
-              </Field>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="keywords"
-            render={({ field, fieldState }) => (
-              <Field>
-                <FieldLabel>Keywords</FieldLabel>
-                <FieldContent>
-                  <Input
-                    {...field}
-                    placeholder="keyword1, keyword2, keyword3"
-                  />
-                  <FieldDescription>Separate with commas.</FieldDescription>
-                  <FieldError errors={[fieldState.error]} />
-                </FieldContent>
-              </Field>
-            )}
-          />
-
-          <SheetFooter className="mt-4 px-0">
+          <SheetFooter>
             <SheetClose asChild>
               <Button variant="outline">Cancel</Button>
             </SheetClose>

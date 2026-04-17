@@ -1,7 +1,7 @@
 "use server";
 
 import { authOptions } from "@/lib/auth";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 
 import Contact from "@/models/Contact";
 import Page from "@/models/Page";

@@ -4,11 +4,16 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-function Breadcrumb({ ...props }) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
+function Breadcrumb({
+  ...props
+}) {
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
-function BreadcrumbList({ className, ...props }) {
+function BreadcrumbList({
+  className,
+  ...props
+}) {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -16,19 +21,20 @@ function BreadcrumbList({ className, ...props }) {
         "flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5",
         className
       )}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
-function BreadcrumbItem({ className, ...props }) {
+function BreadcrumbItem({
+  className,
+  ...props
+}) {
   return (
     <li
       data-slot="breadcrumb-item"
       className={cn("inline-flex items-center gap-1.5", className)}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
 function BreadcrumbLink({
@@ -42,12 +48,14 @@ function BreadcrumbLink({
     <Comp
       data-slot="breadcrumb-link"
       className={cn("transition-colors hover:text-foreground", className)}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
-function BreadcrumbPage({ className, ...props }) {
+function BreadcrumbPage({
+  className,
+  ...props
+}) {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -55,9 +63,8 @@ function BreadcrumbPage({ className, ...props }) {
       aria-disabled="true"
       aria-current="page"
       className={cn("font-normal text-foreground", className)}
-      {...props}
-    />
-  )
+      {...props} />
+  );
 }
 
 function BreadcrumbSeparator({
@@ -71,11 +78,10 @@ function BreadcrumbSeparator({
       role="presentation"
       aria-hidden="true"
       className={cn("[&>svg]:size-3.5", className)}
-      {...props}
-    >
+      {...props}>
       {children ?? <ChevronRight />}
     </li>
-  )
+  );
 }
 
 function BreadcrumbEllipsis({
@@ -88,12 +94,11 @@ function BreadcrumbEllipsis({
       role="presentation"
       aria-hidden="true"
       className={cn("flex size-9 items-center justify-center", className)}
-      {...props}
-    >
+      {...props}>
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More</span>
     </span>
-  )
+  );
 }
 
 export {

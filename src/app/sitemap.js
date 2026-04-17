@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import Page from "@/models/Page";
 import User from "@/models/User";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import User from "@/models/User";
 
 // Ensure models are registered

@@ -1,7 +1,7 @@
 "use server";
 
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mailer";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/lib/db";
 import User from "@/models/User";
 import { hash } from "bcryptjs";
 import crypto from "node:crypto";

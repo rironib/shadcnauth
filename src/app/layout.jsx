@@ -6,10 +6,11 @@ import { authOptions } from "@/lib/auth";
 import { constructMetadata } from "@/lib/metadata";
 import { env } from "@/lib/validateEnv";
 import { getServerSession } from "next-auth/next";
-import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
-
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+import "./globals.css";
 
 export const metadata = constructMetadata();
 
@@ -30,8 +31,10 @@ export default async function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
-            <ErrorBoundary>{children}</ErrorBoundary>
-            <Toaster />
+            <TooltipProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
+              <Toaster />
+            </TooltipProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>
