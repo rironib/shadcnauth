@@ -22,7 +22,7 @@ import {
 import { atomic_age } from "@/config/fonts";
 import { cn } from "@/lib/utils";
 import { gravatar } from "next-gravatar";
-import { HelpCircle, LayoutDashboard, Menu, Users } from "lucide-react";
+import { HelpCircle, Info, LayoutDashboard, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -59,7 +59,7 @@ const ListItem = React.forwardRef(
 ListItem.displayName = "ListItem";
 
 const navLinks = [
-  { title: "Members", href: "/members", icon: Users },
+  { title: "About", href: "/page/about", icon: Info },
   { title: "Help & Support", href: "/page/contact", icon: HelpCircle },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContactAction } from "@/actions/public/contact";
+import { createInquiryAction } from "@/actions/public/inquiry";
 import LoadingSpinner from "@/components/loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export default function ContactForm() {
     };
 
     try {
-      const result = await createContactAction(formData);
+      const result = await createInquiryAction(formData);
       if (result.success) {
         setStatusMsg({
           isAlert: true,

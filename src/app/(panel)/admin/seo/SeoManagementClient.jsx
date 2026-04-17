@@ -179,7 +179,7 @@ export default function SeoManagementClient({ initialData = [] }) {
                     <EmptyHeader>
                       <EmptyTitle>No SEO records found</EmptyTitle>
                       <EmptyDescription>
-                        You haven't created any SEO configurations yet. Click the
+                        You haven&apos;t created any SEO configurations yet. Click the
                         button above to get started.
                       </EmptyDescription>
                     </EmptyHeader>

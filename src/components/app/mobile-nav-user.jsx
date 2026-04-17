@@ -28,7 +28,7 @@ export function MobileNavUser() {
     return <div className="h-12 w-full animate-pulse rounded-lg bg-muted" />;
 
   const { name, email, role } = user;
-  const avatar = gravatar(email || "info@shadcnauth.com", 50);
+  const avatar = gravatar(email, 50);
 
   return (
     <>

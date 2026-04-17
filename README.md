@@ -55,6 +55,7 @@ The application is built on a modern tech stack prioritized for security, speed,
 - **Administrator Dashboard**:
   - **User Management**: Search, view, and manage roles for all registered members.
   - **SEO Management**: Global control of meta titles, descriptions, and keywords.
+  - **Inquiry Management**: Streamlined side-sheet interface for tracking and archiving user messages.
   - **Page Engine**: Create and manage custom static pages (About, Contact, etc.).
   - **Analytics**: VisualTelemetry of registrations and system stats.
 - **Moderator Dashboard**:
@@ -69,7 +70,7 @@ The application is built on a modern tech stack prioritized for security, speed,
 - `actions/`: Centralized Server Actions for auth, admin, and user operations.
 - `app/`: Next.js App Router (Pages, layouts, and API endpoints).
 - `components/`: Modular building blocks (Shadcn UI primitives + custom features).
-- `models/`: Mongoose schemas for Users, Pages, Contacts, and SEO.
+- `models/`: Mongoose schemas for Users, Pages, Inquiries, and SEO.
 - `lib/`: Shared utilities (MongoDB connector, SEO helpers, Mailer, etc.).
 - `config/`: Global site configuration, navigation, and route definitions.
 
@@ -131,8 +132,8 @@ ShadcnUI Auth aims to redefine the "Starter Kit" experience by providing more th
 
 For testing purposes, you can use the following accounts (all use the same password):
 
-| Role          | Email                 | Password      |
-| ------------- | --------------------- | ------------- |
-| **Admin**     | `admin@email.com`     | `password123` |
-| **Moderator** | `moderator@email.com` | `password123` |
-| **User**      | `user@email.com`      | `password123` |
+| Role          | Email                 | Password    |
+| ------------- | --------------------- | ----------- |
+| **Admin**     | `admin@email.com`     | `#Admin123` |
+| **Moderator** | `moderator@email.com` | `#Mod123`   |
+| **User**      | `user@email.com`      | `#User123`  |

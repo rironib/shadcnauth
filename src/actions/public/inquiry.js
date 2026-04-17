@@ -1,15 +1,15 @@
 "use server";
 
 import connectDB from "@/lib/db";
-import Contact from "@/models/Contact";
+import Inquiry from "@/models/Inquiry";
 
 // Ensure models are registered
-const _models = { Contact };
+const _models = { Inquiry };
 
 /**
- * 📩 Send a contact message
+ * 📩 Send an inquiry message
  */
-export async function createContactAction(data) {
+export async function createInquiryAction(data) {
   try {
     const { name, email, subject, message } = data;
 
@@ -18,9 +18,9 @@ export async function createContactAction(data) {
     }
 
     await connectDB();
-    const contact = await Contact.create(data);
+    const inquiry = await Inquiry.create(data);
 
-    return { success: true, data: JSON.parse(JSON.stringify(contact)) };
+    return { success: true, data: JSON.parse(JSON.stringify(inquiry)) };
   } catch (error) {
     return {
       success: false,

@@ -108,6 +108,7 @@ export const data = {
           { title: "Users", url: "/admin/users" },
           { title: "Pages", url: "/admin/pages" },
           { title: "SEO Management", url: "/admin/seo" },
+          { title: "Inquiries", url: "/admin/inquiries" },
           { title: "System Settings", url: "/admin/settings" },
         ],
       },

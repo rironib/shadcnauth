@@ -3,14 +3,14 @@
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 
-import Contact from "@/models/Contact";
+import Inquiry from "@/models/Inquiry";
 import Page from "@/models/Page";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 
 // Ensure models are registered
 const _models = {
-  Contact,
+  Inquiry,
   Page,
   User,
 };
@@ -49,7 +49,7 @@ export async function getAdminAnalyticsAction(range = "30", tz = "Asia/Dhaka") {
     const models = {
       users: User,
       pages: Page,
-      contacts: Contact,
+      inquiries: Inquiry,
     };
 
     const modelKeys = Object.keys(models);
@@ -106,7 +106,7 @@ export async function getAdminAnalyticsAction(range = "30", tz = "Asia/Dhaka") {
     const statsCounts = await Promise.all([
       User.countDocuments(),
       Page.countDocuments(),
-      Contact.countDocuments(),
+      Inquiry.countDocuments(),
       User.countDocuments({ status: { $in: ["banned", "suspended"] } }),
       User.countDocuments({ emailVerified: null }),
     ]);
@@ -118,7 +118,7 @@ export async function getAdminAnalyticsAction(range = "30", tz = "Asia/Dhaka") {
         stats: {
           totalUsers: statsCounts[0],
           totalPages: statsCounts[1],
-          totalContacts: statsCounts[2],
+          totalInquiries: statsCounts[2],
           bannedUsers: statsCounts[3],
           unverifiedUsers: statsCounts[4],
         },

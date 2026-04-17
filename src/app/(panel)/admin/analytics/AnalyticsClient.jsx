@@ -27,7 +27,7 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const chartConfig = {
   users: { label: "Users", color: "#f59e0b" }, // Amber
   pages: { label: "Pages", color: "#ec4899" }, // Pink
-  contacts: { label: "Contacts", color: "#0ea5e9" }, // Sky
+  inquiries: { label: "Inquiries", color: "#0ea5e9" }, // Sky
 };
 
 const ranges = [
@@ -95,10 +95,10 @@ export default function AnalyticsClient() {
       color: "#ec4899",
     },
     {
-      label: "Contacts",
-      value: data.stats.totalContacts,
+      label: "Inquiries",
+      value: data.stats.totalInquiries,
       icon: Mail,
-      sub: "External Leads",
+      sub: "User Leads",
       color: "#0ea5e9",
     },
   ];

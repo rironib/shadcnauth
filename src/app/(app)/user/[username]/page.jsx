@@ -72,7 +72,7 @@ export default async function PublicProfilePage({ params }) {
     );
   }
 
-  const avatar = gravatar(user.email || "info@shadcnauth.com", 200);
+  const avatar = gravatar(user.email, 200);
   const joinedDate = new Date(user.createdAt).toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
